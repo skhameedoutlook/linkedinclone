@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Sign Up|LinkedIn Clone</title>
+		<title>LinkedIn Clone</title>
 		<link rel="stylesheet" type="text/css" href="styles/bootstrap/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="styles/indexstyles.css">
 	</head>
@@ -31,10 +31,9 @@
 
                     <input type='submit' value='Sign In'/>
                 </form>
-                New to LinkedIn? <a href='join.php'>Join now</a>
+                New to LinkedIn Clone? <a href='join.php'>Join now</a>
                 ";
             }
         ?>
-        New to LinkedIn? <a href="join.php">Join now</a>
 	</body>
 </html>
