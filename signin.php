@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -12,7 +10,72 @@
         <?php
             session_start();
             if(isset($_POST["email"])) {
-                $_SESSION['uname'] = 'skhameed@outlook.com';
+                // $_SESSION['uname'] = 'skhameed@outlook.com';
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $database = "linkedinclone";
+
+                // Create connection
+                $conn = mysqli_connect($servername, $username, $password, $database);
+
+                // Check connection
+                if (!$conn) {
+                    die("Connection failed: " . mysqli_connect_error());
+                    $_SESSION['error_message'] = 'DB error occured. Please try again.';
+                    echo "
+                    <script>window.location.href='signin.php'</script>
+                    ";
+                }
+                $loginsuccess = 1;
+                $email = $_POST["email"];
+                $password = $_POST["password"];
+                $sql = "select count(email) from usertable where email='$email'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_row($result);
+                if($row[0] == "1") {
+                    $sql = "select password from usertable where email='$email'";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_row($result);
+                    if($row[0] == $password) {
+                        //section to be used later.
+                    }
+                    else {
+                        $loginsuccess = 3;
+                    }
+                }
+                else {
+                    $loginsuccess = 2;
+                }
+                mysqli_close($conn);
+                if($loginsuccess == 1) {
+                    unset($_SESSION['error_message']);
+                    $_SESSION['uname'] = $email;
+                    echo "
+                    <script>window.location.href='signin.php'</script>
+                    ";
+                }
+                else if($loginsuccess == 2) {
+                    unset($_SESSION['uname']);
+                    $_SESSION['error_message'] = 'Invalid email. Please try logging in with a registered email id.';
+                    echo "
+                    <script>window.location.href='signin.php'</script>
+                    ";
+                }
+                else if($loginsuccess == 3) {
+                    unset($_SESSION['uname']);
+                    $_SESSION['error_message'] = 'Invalid password. Please try logging in again.';
+                    echo "
+                    <script>window.location.href='signin.php'</script>
+                    ";
+                }
+                else {
+                    unset($_SESSION['uname']);
+                    $_SESSION['error_message'] = 'Unknown error occured. Please try logging in again.';
+                    echo "
+                    <script>window.location.href='signin.php'</script>
+                    ";
+                }
             }
             if(isset($_SESSION['uname'])) {
                 echo "Logged In: ". $_SESSION['uname'];
@@ -24,8 +87,12 @@
             }
             else {
                 unset($_POST["email"]);
+                if(isset($_SESSION['error_message'])) {
+                    echo $_SESSION['error_message'];
+                    // session_destroy();
+                }
                 echo "
-                <form method='post'>
+                <form method='post' action='signin.php'>
                     <input type='text' name='email' />
                     <input type='password' name='password'/>
 
